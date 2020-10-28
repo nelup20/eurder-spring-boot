@@ -10,11 +10,10 @@ import java.util.Map;
 public class CustomerDatabase {
     private Map<String, Customer> customers = new HashMap<>();
 
-    public String registerNewCustomer(Customer newCustomer){
+    public void registerNewCustomer(Customer newCustomer){
         if(!isEmailUnique(newCustomer.getEmailAddress())) throw new IllegalArgumentException("This email is already registered.");
 
         customers.put(newCustomer.getId(), newCustomer);
-        return "Welcome " + newCustomer.getFirstName() + " " + newCustomer.getLastName() + " with email " + newCustomer.getEmailAddress() + ", you are now a Eurder customer!";
     }
 
     public boolean customerExists(Customer customerToCheck){
@@ -23,5 +22,9 @@ public class CustomerDatabase {
 
     public boolean isEmailUnique(String emailToCheck){
         return customers.values().stream().noneMatch(customer -> customer.getEmailAddress().equals(emailToCheck));
+    }
+
+    public Customer getCustomerById(String customerId){
+        return customers.get(customerId);
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/customers")
 public class CustomerController {
 
     private CustomerService customerService;
@@ -18,10 +18,13 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @PostMapping("/customers")
-    public String createCustomer(@RequestBody NewCustomerDto newCustomerDto){
+    @PostMapping
+    public Customer createCustomer(@RequestBody NewCustomerDto newCustomerDto){
         Customer newCustomer = CustomerMapper.convertNewCustomerDtoToCustomer(newCustomerDto);
-        return customerService.registerNewCustomer(newCustomer);
+
+        customerService.registerNewCustomer(newCustomer);
+
+        return newCustomer;
     }
 
 }
