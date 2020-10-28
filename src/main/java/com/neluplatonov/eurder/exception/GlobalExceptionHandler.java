@@ -30,4 +30,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST, exception.getMessage());
     }
 
+    @ExceptionHandler(AdminPrivilegeException.class)
+    protected void AdminPrivilegeExceptionHandler(AdminPrivilegeException exception, HttpServletResponse response) throws IOException {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.getMessage());
+    }
+
 }

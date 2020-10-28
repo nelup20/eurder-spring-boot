@@ -6,6 +6,8 @@ import com.neluplatonov.eurder.validator.CustomerValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class CustomerService {
 
@@ -16,9 +18,10 @@ public class CustomerService {
         this.customerDatabase = customerDatabase;
     }
 
-    public String registerNewCustomer(Customer newCustomer){
+    public void registerNewCustomer(Customer newCustomer){
         CustomerValidator.validateEmail(newCustomer.getEmailAddress());
+        CustomerValidator.validateArgumentsAreNotEmpty(List.of(newCustomer.getFirstName(), newCustomer.getLastName(), newCustomer.getAddress(), newCustomer.getPhoneNumber()));
 
-        return customerDatabase.registerNewCustomer(newCustomer);
+        customerDatabase.registerNewCustomer(newCustomer);
     }
 }
