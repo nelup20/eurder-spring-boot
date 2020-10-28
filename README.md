@@ -12,3 +12,7 @@
    - [ ] Story 4
    - [ ] Story 9
    - [ ] Story 6
+
+## UML diagrams
+### Basic must-have's
+![Basic UML Diagram](eurder-must-have-UML-diagram.jpg) 
