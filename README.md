@@ -2,7 +2,7 @@
 ## Story progression:
 * Must-have's:
    - [X] Story 1
-   - [ ] Story 2
+   - [X] Story 2
    - [ ] Story 3
    - [ ] Story 7
    - [ ] Story 8
