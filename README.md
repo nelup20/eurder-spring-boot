@@ -1,7 +1,7 @@
 # eurder-spring-boot
 ## Story progression:
-- Must-have's:
-   - [ ] Story 1
+* Must-have's:
+   - [X] Story 1
    - [ ] Story 2
    - [ ] Story 3
    - [ ] Story 7
