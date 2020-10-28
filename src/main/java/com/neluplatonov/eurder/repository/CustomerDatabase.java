@@ -10,14 +10,20 @@ import java.util.Map;
 public class CustomerDatabase {
     private Map<String, Customer> customers = new HashMap<>();
 
+    public CustomerDatabase() {
+        Customer initialCustomer = new Customer("John", "Doe", "johndoe.initialCustomer@gmail.com", "New street 23", "04953122");
+        initialCustomer.setId("c6093628-b11a-4ece-b2f0-509fc0f3c132");
+        customers.put(initialCustomer.getId(), initialCustomer);
+    }
+
     public void registerNewCustomer(Customer newCustomer){
         if(!isEmailUnique(newCustomer.getEmailAddress())) throw new IllegalArgumentException("This email is already registered.");
 
         customers.put(newCustomer.getId(), newCustomer);
     }
 
-    public boolean customerExists(Customer customerToCheck){
-        return customers.get(customerToCheck.getId()) != null;
+    public boolean customerExists(String customerId){
+        return customers.get(customerId) != null;
     }
 
     public boolean isEmailUnique(String emailToCheck){
