@@ -21,6 +21,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    // TODO: Need to have createOrder return a NewlyCreatedOrderDto, store the Item price at the time of ordering in the ItemGroup
     @PostMapping
     public Order createOrder(@RequestHeader String customerId, @RequestBody List<ItemGroupDto> orderItemsDto){
         orderService.checkIfAllItemIdsExistInItemDatabase(orderItemsDto);

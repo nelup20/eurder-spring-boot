@@ -3,9 +3,11 @@ package com.neluplatonov.eurder.service;
 import com.neluplatonov.eurder.api.dtos.itemgroupdtos.ItemGroupDto;
 import com.neluplatonov.eurder.api.dtos.itemgroupdtos.ReportItemGroupDto;
 import com.neluplatonov.eurder.api.dtos.orderdtos.ReportOrderDto;
+import com.neluplatonov.eurder.api.mappers.OrderMapper;
 import com.neluplatonov.eurder.domain.ItemGroup;
 import com.neluplatonov.eurder.domain.Order;
 import com.neluplatonov.eurder.domain.Report;
+import com.neluplatonov.eurder.exception.NoCustomerFoundException;
 import com.neluplatonov.eurder.repository.CustomerDatabase;
 import com.neluplatonov.eurder.repository.ItemDatabase;
 import com.neluplatonov.eurder.repository.OrderDatabase;
@@ -33,7 +35,7 @@ public class OrderService {
 
     public Order createOrder(String customerId, List<ItemGroup> orderItems){
         IdValidator.validateSingleUUID(customerId);
-        if(!customerDatabase.customerExists(customerId)) throw new IllegalArgumentException("The customer with the provided ID does not exist! Only a registered Eurder customer can make an Order.");
+        if(!customerDatabase.customerExists(customerId)) throw new NoCustomerFoundException("The customer with the provided ID does not exist! Only a registered Eurder customer can make an Order.");
 
         List<ItemGroup> orderItemsWithCorrectShippingDates = assignCorrectShippingDates(orderItems);
         double newOrderTotalCostInEuros = calculateTotalCostInEurosForNewOrder(orderItemsWithCorrectShippingDates);
@@ -77,32 +79,12 @@ public class OrderService {
 
     public Report getOrdersReport(String customerId){
         IdValidator.validateSingleUUID(customerId);
-        if(!customerDatabase.customerExists(customerId)) throw new IllegalArgumentException("The customer with the provided ID does not exist!");
+        if(!customerDatabase.customerExists(customerId)) throw new NoCustomerFoundException("The customer with the provided ID does not exist!");
 
         List<Order> customerOrders = orderDatabase.getAllOrdersPerCustomer(customerId);
-        List<ReportOrderDto> customerReportOrders = convertCustomerOrdersListToReportOrderDtoList(customerOrders);
+        List<ReportOrderDto> customerReportOrders = OrderMapper.convertCustomerOrdersListToReportOrderDtoList(customerOrders, itemDatabase);
 
         return new Report(customerReportOrders);
     }
 
-    // TODO: See if you can refactor this monstrosity (1st idea: put it in a mapper, 2nd idea: make 2 nested streams?)
-    public List<ReportOrderDto> convertCustomerOrdersListToReportOrderDtoList(List<Order> listToConvert){
-        List<ReportOrderDto> resultOrderList = new ArrayList<>();
-
-        for(Order order : listToConvert){
-            List<ReportItemGroupDto> resultItemGroupList = new ArrayList<>();
-
-            for(ItemGroup itemGroup : order.getItems()){
-                String itemName = itemDatabase.getItemName(itemGroup.getItemId());
-                int itemQuantityOrdered = itemGroup.getItemQuantityToOrder();
-                double itemGroupTotalPriceInEuros = itemDatabase.getItemPriceInEuros(itemGroup.getItemId()) * itemQuantityOrdered;
-
-                resultItemGroupList.add(new ReportItemGroupDto(itemName, itemQuantityOrdered, itemGroupTotalPriceInEuros));
-            }
-
-            resultOrderList.add(new ReportOrderDto(order.getId(), resultItemGroupList, order.getTotalOrderCostInEuros()));
-        }
-
-        return resultOrderList;
-    }
 }

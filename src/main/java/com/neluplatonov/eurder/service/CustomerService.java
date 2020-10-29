@@ -4,7 +4,6 @@ import com.neluplatonov.eurder.domain.Customer;
 import com.neluplatonov.eurder.exception.AdminPrivilegeException;
 import com.neluplatonov.eurder.repository.AdminDatabase;
 import com.neluplatonov.eurder.repository.CustomerDatabase;
-import com.neluplatonov.eurder.repository.OrderDatabase;
 import com.neluplatonov.eurder.validator.CustomerValidator;
 import com.neluplatonov.eurder.validator.IdValidator;
 import org.springframework.beans.factory.annotation.Autowired;
