@@ -24,11 +24,8 @@ public class ItemService {
     }
 
     public void addNewItem(String userId, Item newItemToAdd){
-        // TODO: refactor later to 1 method that takes in a List of generic args
-        ItemValidator.validateStringArgumentsAreNotEmpty(List.of(newItemToAdd.getName(), newItemToAdd.getDescription()));
-        ItemValidator.validateNumericArgumentIsNotNegative(newItemToAdd.getPriceInEuros());
-        ItemValidator.validateNumericArgumentIsNotNegative(newItemToAdd.getAmountInStock());
 
+        ItemValidator.validateItemArguments(List.of(newItemToAdd.getName(), newItemToAdd.getDescription(), newItemToAdd.getPriceInEuros(), newItemToAdd.getAmountInStock()));
 
         IdValidator.validateSingleUUID(userId);
         if(!adminDatabase.isUserAnAdmin(userId)) throw new AdminPrivilegeException("Only an admin can add a new item!");
