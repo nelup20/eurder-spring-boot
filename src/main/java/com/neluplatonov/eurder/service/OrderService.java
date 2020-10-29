@@ -50,10 +50,9 @@ public class OrderService {
 
     private List<ItemGroup> assignCorrectShippingDates(List<ItemGroup> orderItems){
         List<ItemGroup> resultList = orderItems;
-
-        // TODO: yeah we can definitely refactor this later, remember Tim's advice/tips!
+        
         for(ItemGroup itemGroup : resultList){
-            if(itemDatabase.getItemById(itemGroup.getItemId()).getAmountInStock() >= itemGroup.getItemQuantityToOrder()){
+            if(thereIsEnoughInStockForTheOrder(itemGroup)){
                 itemGroup.setShippingDate(LocalDate.now().plusDays(1));
             }
         }
@@ -61,9 +60,14 @@ public class OrderService {
         return resultList;
     }
 
+
     private double calculateTotalCostInEurosForNewOrder(List<ItemGroup> orderItems){
         return orderItems.stream()
-                         .map(itemGroup -> itemDatabase.getItemById(itemGroup.getItemId()).getPriceInEuros() * itemGroup.getItemQuantityToOrder())
+                         .map(itemGroup -> itemDatabase.getItemPriceInEuros(itemGroup.getItemId()) * itemGroup.getItemQuantityToOrder())
                          .reduce(0.0, Double::sum);
+    }
+
+    private boolean thereIsEnoughInStockForTheOrder(ItemGroup itemGroup) {
+        return itemDatabase.getItemAmountInStock(itemGroup.getItemId()) >= itemGroup.getItemQuantityToOrder();
     }
 }

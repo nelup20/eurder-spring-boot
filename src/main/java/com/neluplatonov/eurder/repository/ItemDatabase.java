@@ -40,4 +40,12 @@ public class ItemDatabase {
     public boolean itemExists(String itemId){
         return items.get(itemId) != null;
     }
+
+    public double getItemPriceInEuros(String itemId){
+        return items.get(itemId).getPriceInEuros();
+    }
+
+    public int getItemAmountInStock(String itemId){
+        return items.get(itemId).getAmountInStock();
+    }
 }

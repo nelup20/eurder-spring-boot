@@ -1,7 +1,6 @@
 package com.neluplatonov.eurder.api.controllers;
 
 import com.neluplatonov.eurder.api.dtos.itemgroupdtos.ItemGroupDto;
-import com.neluplatonov.eurder.api.dtos.orderDtos.CreatedOrderDto;
 import com.neluplatonov.eurder.api.mappers.ItemGroupMapper;
 import com.neluplatonov.eurder.domain.ItemGroup;
 import com.neluplatonov.eurder.domain.Order;

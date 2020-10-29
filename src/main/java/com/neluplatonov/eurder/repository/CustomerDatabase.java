@@ -3,6 +3,7 @@ package com.neluplatonov.eurder.repository;
 import com.neluplatonov.eurder.domain.Customer;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,6 @@ public class CustomerDatabase {
     }
 
     public List<Customer> getAllCustomers(){
-        return customers.values().stream().collect(Collectors.toList());
+        return new ArrayList<>(customers.values());
     }
 }
