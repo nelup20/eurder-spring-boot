@@ -34,4 +34,9 @@ public class CustomerController {
         return customerService.getAllCustomers(userId);
     }
 
+    @GetMapping("/{customerId}")
+    public Customer getCustomerById(@PathVariable String customerId, @RequestHeader String userId){
+        return customerService.getCustomerById(customerId, userId);
+    }
+
 }

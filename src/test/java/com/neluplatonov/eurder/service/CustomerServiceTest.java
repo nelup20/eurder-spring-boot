@@ -128,7 +128,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    void givenNewCustomerService_whenGettingAllCustomersAndProvidingInvalidAdminId_thenThrowsIllegalArgumentException(){
+    void givenNewCustomerService_whenGettingAllCustomersAndProvidingInvalidUserId_thenThrowsIllegalArgumentException(){
         //given
         CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
 
@@ -188,5 +188,102 @@ class CustomerServiceTest {
 
         //then
         assertFalse(resultList.contains(nonEurderCustomer));
+    }
+
+    @Test
+    void givenNewCustomerService_whenGettingCustomerByIdAndProvidingInvalidCustomerId_thenThrowsIllegalArgumentException(){
+        //given
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
+
+        //when
+        String adminId = "de6def71-53ca-4e5e-85ef-9ed3ab598391";
+        Customer initialCustomer = new Customer("John", "Doe", "johndoe.initialCustomer@gmail.com", "New street 23", "04953122");
+        initialCustomer.setId("c6093628-b11a-4ece-b2f0-509fc0f3c132");
+
+        //then
+        assertThrows(IllegalArgumentException.class, () -> {
+            customerService.getCustomerById("12345", adminId);
+        });
+    }
+
+    @Test
+    void givenNewCustomerService_whenGettingCustomerByIdAndProvidingInvalidUserId_thenThrowsIllegalArgumentException(){
+        //given
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
+
+        //when
+        String adminId = "de6def71-53ca-4e5e-85ef-9ed3ab598391";
+        Customer initialCustomer = new Customer("John", "Doe", "johndoe.initialCustomer@gmail.com", "New street 23", "04953122");
+        initialCustomer.setId("c6093628-b11a-4ece-b2f0-509fc0f3c132");
+
+        //then
+        assertThrows(IllegalArgumentException.class, () -> {
+            customerService.getCustomerById(initialCustomer.getId(), "123456");
+        });
+    }
+
+    @Test
+    void givenNewCustomerService_whenGettingCustomerByIdAndProvidingNonCustomerId_thenThrowsIllegalArgumentException(){
+        //given
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
+
+        //when
+        String adminId = "de6def71-53ca-4e5e-85ef-9ed3ab598391";
+        Customer initialCustomer = new Customer("John", "Doe", "johndoe.initialCustomer@gmail.com", "New street 23", "04953122");
+        initialCustomer.setId("c6093628-b11a-4ece-b2f0-509fc0f3c132");
+        String itemId = "44492ce0-dfca-49f5-b519-0bf2839f2d64";
+
+        //then
+        assertThrows(IllegalArgumentException.class, () -> {
+            customerService.getCustomerById(itemId, adminId);
+        });
+    }
+
+    @Test
+    void givenNewCustomerService_whenGettingCustomerByIdAndProvidingNonAdminId_thenThrowsAdminPrivilegeException(){
+        //given
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
+
+        //when
+        String adminId = "de6def71-53ca-4e5e-85ef-9ed3ab598391";
+        Customer initialCustomer = new Customer("John", "Doe", "johndoe.initialCustomer@gmail.com", "New street 23", "04953122");
+        initialCustomer.setId("c6093628-b11a-4ece-b2f0-509fc0f3c132");
+        String itemId = "44492ce0-dfca-49f5-b519-0bf2839f2d64";
+
+        //then
+        assertThrows(AdminPrivilegeException.class, () -> {
+            customerService.getCustomerById(initialCustomer.getId(), itemId);
+        });
+    }
+
+    @Test
+    void givenNewCustomerService_whenGettingCustomerById_thenReturnedCustomerEqualsInitialCustomer(){
+        //given
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
+
+        //when
+        String adminId = "de6def71-53ca-4e5e-85ef-9ed3ab598391";
+        Customer initialCustomer = new Customer("John", "Doe", "johndoe.initialCustomer@gmail.com", "New street 23", "04953122");
+        initialCustomer.setId("c6093628-b11a-4ece-b2f0-509fc0f3c132");
+
+        //then
+        assertEquals(initialCustomer, customerService.getCustomerById(initialCustomer.getId(), adminId));
+    }
+
+    @Test
+    void givenNewCustomerService_whenGettingCustomerById_thenReturnedCustomerDoesNotEqualNonEurderCustomer(){
+        //given
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
+
+        //when
+        String adminId = "de6def71-53ca-4e5e-85ef-9ed3ab598391";
+        Customer initialCustomer = new Customer("John", "Doe", "johndoe.initialCustomer@gmail.com", "New street 23", "04953122");
+        initialCustomer.setId("c6093628-b11a-4ece-b2f0-509fc0f3c132");
+
+        Customer nonEurderCustomer = new Customer("Bob", "Doe", "bobby@gmail.com", "New street 23", "04953122");
+        nonEurderCustomer.setId("d7093628-b11a-4ece-b2f0-509fc0f3c132");
+
+        //then
+        assertNotEquals(nonEurderCustomer, customerService.getCustomerById(initialCustomer.getId(), adminId));
     }
 }
