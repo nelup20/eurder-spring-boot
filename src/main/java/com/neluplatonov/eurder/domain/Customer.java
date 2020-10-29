@@ -42,4 +42,8 @@ public class Customer {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

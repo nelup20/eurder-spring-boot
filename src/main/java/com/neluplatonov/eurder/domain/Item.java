@@ -37,6 +37,10 @@ public class Item {
         return amountInStock;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
