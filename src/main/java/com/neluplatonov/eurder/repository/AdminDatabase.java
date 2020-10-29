@@ -11,7 +11,7 @@ public class AdminDatabase {
     private Map<String, Admin> admins = new HashMap<>();
 
     public AdminDatabase() {
-        // Creating 1 initial admin for testing purposes etc.
+        // Populating/Seeding initial database
         Admin initialAdmin = new Admin("Jake", "The Admin", "jake@admin.com");
         initialAdmin.setId("de6def71-53ca-4e5e-85ef-9ed3ab598391");
         admins.put(initialAdmin.getId(), initialAdmin);

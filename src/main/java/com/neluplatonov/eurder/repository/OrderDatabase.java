@@ -13,4 +13,8 @@ public class OrderDatabase {
     public void createOrder(Order newOrder){
         orders.put(newOrder.getId(), newOrder);
     }
+
+    public Map<String, Order> getAllOrders() {
+        return orders;
+    }
 }

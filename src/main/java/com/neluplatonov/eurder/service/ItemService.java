@@ -30,7 +30,7 @@ public class ItemService {
         ItemValidator.validateNumericArgumentIsNotNegative(newItemToAdd.getAmountInStock());
 
 
-        IdValidator.validateUUID(userId);
+        IdValidator.validateSingleUUID(userId);
         if(!adminDatabase.isUserAnAdmin(userId)) throw new AdminPrivilegeException("Only an admin can add a new item!");
 
         itemDatabase.addNewItem(newItemToAdd);

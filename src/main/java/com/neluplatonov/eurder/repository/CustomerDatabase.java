@@ -11,6 +11,7 @@ public class CustomerDatabase {
     private Map<String, Customer> customers = new HashMap<>();
 
     public CustomerDatabase() {
+        // Populating/Seeding initial database
         Customer initialCustomer = new Customer("John", "Doe", "johndoe.initialCustomer@gmail.com", "New street 23", "04953122");
         initialCustomer.setId("c6093628-b11a-4ece-b2f0-509fc0f3c132");
         customers.put(initialCustomer.getId(), initialCustomer);
