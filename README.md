@@ -5,7 +5,7 @@
    - [X] Story 2
    - [X] Story 3
    - [X] Story 7
-   - [ ] Story 8
+   - [X] Story 8
 - Nice-to-have's:
    - [ ] Story 5
    - [ ] Story 10
