@@ -4,6 +4,7 @@ import com.neluplatonov.eurder.api.dtos.itemgroupdtos.ItemGroupDto;
 import com.neluplatonov.eurder.api.mappers.ItemGroupMapper;
 import com.neluplatonov.eurder.domain.ItemGroup;
 import com.neluplatonov.eurder.domain.Order;
+import com.neluplatonov.eurder.domain.Report;
 import com.neluplatonov.eurder.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,5 +28,10 @@ public class OrderController {
         List<ItemGroup> orderItems = ItemGroupMapper.convertListOfItemGroupDtosToListOfItemGroups(orderItemsDto);
 
         return orderService.createOrder(customerId, orderItems);
+    }
+
+    @GetMapping("/my-orders")
+    public Report getOrdersReport(@RequestHeader String customerId){
+        return orderService.getOrdersReport(customerId);
     }
 }

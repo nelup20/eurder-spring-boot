@@ -1,8 +1,11 @@
 package com.neluplatonov.eurder.service;
 
 import com.neluplatonov.eurder.api.dtos.itemgroupdtos.ItemGroupDto;
+import com.neluplatonov.eurder.api.dtos.itemgroupdtos.ReportItemGroupDto;
+import com.neluplatonov.eurder.api.dtos.orderdtos.ReportOrderDto;
 import com.neluplatonov.eurder.domain.ItemGroup;
 import com.neluplatonov.eurder.domain.Order;
+import com.neluplatonov.eurder.domain.Report;
 import com.neluplatonov.eurder.repository.CustomerDatabase;
 import com.neluplatonov.eurder.repository.ItemDatabase;
 import com.neluplatonov.eurder.repository.OrderDatabase;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,5 +73,36 @@ public class OrderService {
 
     private boolean thereIsEnoughInStockForTheOrder(ItemGroup itemGroup) {
         return itemDatabase.getItemAmountInStock(itemGroup.getItemId()) >= itemGroup.getItemQuantityToOrder();
+    }
+
+    public Report getOrdersReport(String customerId){
+        IdValidator.validateSingleUUID(customerId);
+        if(!customerDatabase.customerExists(customerId)) throw new IllegalArgumentException("The customer with the provided ID does not exist!");
+
+        List<Order> customerOrders = orderDatabase.getAllOrdersPerCustomer(customerId);
+        List<ReportOrderDto> customerReportOrders = convertCustomerOrdersListToReportOrderDtoList(customerOrders);
+
+        return new Report(customerReportOrders);
+    }
+
+    // TODO: See if you can refactor this monstrosity (1st idea: put it in a mapper, 2nd idea: make 2 nested streams?)
+    public List<ReportOrderDto> convertCustomerOrdersListToReportOrderDtoList(List<Order> listToConvert){
+        List<ReportOrderDto> resultOrderList = new ArrayList<>();
+
+        for(Order order : listToConvert){
+            List<ReportItemGroupDto> resultItemGroupList = new ArrayList<>();
+
+            for(ItemGroup itemGroup : order.getItems()){
+                String itemName = itemDatabase.getItemName(itemGroup.getItemId());
+                int itemQuantityOrdered = itemGroup.getItemQuantityToOrder();
+                double itemGroupTotalPriceInEuros = itemDatabase.getItemPriceInEuros(itemGroup.getItemId()) * itemQuantityOrdered;
+
+                resultItemGroupList.add(new ReportItemGroupDto(itemName, itemQuantityOrdered, itemGroupTotalPriceInEuros));
+            }
+
+            resultOrderList.add(new ReportOrderDto(order.getId(), resultItemGroupList, order.getTotalOrderCostInEuros()));
+        }
+
+        return resultOrderList;
     }
 }

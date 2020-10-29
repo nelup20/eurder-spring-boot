@@ -1,6 +1,5 @@
 package com.neluplatonov.eurder.domain;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
