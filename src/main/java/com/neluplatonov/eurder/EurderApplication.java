@@ -7,11 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @SpringBootApplication
 public class EurderApplication {
 
-    @RequestMapping("/")
-    public String index(){
-        return "Hello welcome to Eurder!";
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(EurderApplication.class, args);
     }
