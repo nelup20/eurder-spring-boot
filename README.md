@@ -6,6 +6,7 @@
    - [X] Story 3
    - [X] Story 7
    - [X] Story 8
+   - [X] Refactored above stories
 - Nice-to-have's:
    - [ ] Story 5
    - [ ] Story 10
