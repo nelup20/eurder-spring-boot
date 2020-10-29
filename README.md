@@ -7,6 +7,7 @@
    - [X] Story 7
    - [X] Story 8
    - [X] Refactored stories above
+   - [ ] Update old UML diagram
 - Nice-to-have's:
    - [ ] Story 5
    - [ ] Story 10
