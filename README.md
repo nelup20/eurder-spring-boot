@@ -3,7 +3,7 @@
 * Must-have's:
    - [X] Story 1
    - [X] Story 2
-   - [ ] Story 3
+   - [X] Story 3
    - [ ] Story 7
    - [ ] Story 8
 - Nice-to-have's:
