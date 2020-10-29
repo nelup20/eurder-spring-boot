@@ -32,8 +32,15 @@ public class CustomerService {
 
     public List<Customer> getAllCustomers(String userId){
         IdValidator.validateSingleUUID(userId);
-        if(!adminDatabase.isUserAnAdmin(userId)) throw new AdminPrivilegeException("The provided ID is not for an admin! Only admins may view all the customers.");
+        if(!adminDatabase.isUserAnAdmin(userId)) throw new AdminPrivilegeException("The provided user ID is not for an admin! Only admins may view all the customers.");
 
         return customerDatabase.getAllCustomers();
+    }
+
+    public Customer getCustomerById(String customerId, String userId){
+        IdValidator.validateListOfUUIDs(List.of(customerId, userId));
+        if(!adminDatabase.isUserAnAdmin(userId)) throw new AdminPrivilegeException("The provided user ID is not for an admin! Only admins can view the details of a single customer.");
+
+        return customerDatabase.getCustomerById(customerId);
     }
 }

@@ -34,6 +34,8 @@ public class CustomerDatabase {
     }
 
     public Customer getCustomerById(String customerId){
+        if(!customerExists(customerId)) throw new IllegalArgumentException("The customer with the provided ID does not exist!");
+
         return customers.get(customerId);
     }
 
