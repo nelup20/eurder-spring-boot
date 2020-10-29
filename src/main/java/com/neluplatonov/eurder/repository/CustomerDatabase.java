@@ -4,7 +4,9 @@ import com.neluplatonov.eurder.domain.Customer;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class CustomerDatabase {
@@ -33,5 +35,9 @@ public class CustomerDatabase {
 
     public Customer getCustomerById(String customerId){
         return customers.get(customerId);
+    }
+
+    public List<Customer> getAllCustomers(){
+        return customers.values().stream().collect(Collectors.toList());
     }
 }

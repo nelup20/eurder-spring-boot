@@ -1,8 +1,12 @@
 package com.neluplatonov.eurder.service;
 
 import com.neluplatonov.eurder.domain.Customer;
+import com.neluplatonov.eurder.exception.AdminPrivilegeException;
+import com.neluplatonov.eurder.repository.AdminDatabase;
 import com.neluplatonov.eurder.repository.CustomerDatabase;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +15,7 @@ class CustomerServiceTest {
     @Test
     void givenNewCustomerService_whenRegisteringNewCustomerWithInvalidEmail_thenThrowsIllegalArgumentException(){
       //given
-      CustomerService customerService = new CustomerService(new CustomerDatabase());
+      CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
 
       //when
       Customer newCustomer = new Customer("John", "Doe", "joooe", "abc. street", "04951251");
@@ -25,7 +29,7 @@ class CustomerServiceTest {
     @Test
     void givenNewCustomerService_whenRegistering2DifferentCustomersWithTheSameEmail_thenThrowsIllegalArgumentException(){
         //given
-        CustomerService customerService = new CustomerService(new CustomerDatabase());
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
 
         //when
         Customer newCustomer1 = new Customer("John", "Doe", "john.doe@gmail.com", "abc. street", "04951251");
@@ -42,7 +46,7 @@ class CustomerServiceTest {
     void givenNewCustomerService_whenRegistering1NewCorrectCustomer_thenNewCustomerIsInDatabase(){
         //given
         CustomerDatabase customerDatabase = new CustomerDatabase();
-        CustomerService customerService = new CustomerService(customerDatabase);
+        CustomerService customerService = new CustomerService(customerDatabase, new AdminDatabase());
 
         //when
         Customer newCustomer1 = new Customer("John", "Doe", "john.doe@gmail.com", "abc. street", "04951251");
@@ -56,7 +60,7 @@ class CustomerServiceTest {
     @Test
     void givenNewCustomerService_whenRegisteringNewCustomerWithEmptyEmail_thenThrowsIllegalArgumentException(){
         //given
-        CustomerService customerService = new CustomerService(new CustomerDatabase());
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
 
         //when
         Customer newCustomer = new Customer("John", "Doe", "", "abc. street", "04951251");
@@ -70,7 +74,7 @@ class CustomerServiceTest {
     @Test
     void givenNewCustomerService_whenRegisteringNewCustomerWithEmptyFirstName_thenThrowsIllegalArgumentException(){
         //given
-        CustomerService customerService = new CustomerService(new CustomerDatabase());
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
 
         //when
         Customer newCustomer = new Customer("", "Doe", "josh@gmail.com", "abc. street", "04951251");
@@ -84,7 +88,7 @@ class CustomerServiceTest {
     @Test
     void givenNewCustomerService_whenRegisteringNewCustomerWithEmptyLastName_thenThrowsIllegalArgumentException(){
         //given
-        CustomerService customerService = new CustomerService(new CustomerDatabase());
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
 
         //when
         Customer newCustomer = new Customer("Bob", "", "josh@gmail.com", "abc. street", "04951251");
@@ -98,7 +102,7 @@ class CustomerServiceTest {
     @Test
     void givenNewCustomerService_whenRegisteringNewCustomerWithEmptyAddress_thenThrowsIllegalArgumentException(){
         //given
-        CustomerService customerService = new CustomerService(new CustomerDatabase());
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
 
         //when
         Customer newCustomer = new Customer("Asd", "Doe", "josh@gmail.com", "", "04951251");
@@ -112,7 +116,7 @@ class CustomerServiceTest {
     @Test
     void givenNewCustomerService_whenRegisteringNewCustomerWithEmptyPhoneNumber_thenThrowsIllegalArgumentException(){
         //given
-        CustomerService customerService = new CustomerService(new CustomerDatabase());
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
 
         //when
         Customer newCustomer = new Customer("asdasd", "Doe", "josh@gmail.com", "abc. street", "");
@@ -121,5 +125,68 @@ class CustomerServiceTest {
         assertThrows(IllegalArgumentException.class, () -> {
             customerService.registerNewCustomer(newCustomer);
         });
+    }
+
+    @Test
+    void givenNewCustomerService_whenGettingAllCustomersAndProvidingInvalidAdminId_thenThrowsIllegalArgumentException(){
+        //given
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
+
+        //when
+        String adminId = "12346";
+
+        //then
+        assertThrows(IllegalArgumentException.class, () -> {
+            customerService.getAllCustomers(adminId);
+        });
+    }
+
+    @Test
+    void givenNewCustomerService_whenGettingAllCustomersAndProvidingNonAdminId_thenThrowsAdminPrivilegeException(){
+        //given
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
+
+        //when
+        String adminId = "44492ce0-dfca-49f5-b519-0bf2839f2d64";
+
+        //then
+        assertThrows(AdminPrivilegeException.class, () -> {
+            customerService.getAllCustomers(adminId);
+        });
+    }
+
+    @Test
+    void givenNewCustomerService_whenGettingAllCustomers_thenListContainsInitialCustomer(){
+        //given
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
+
+        //when
+        String adminId = "de6def71-53ca-4e5e-85ef-9ed3ab598391";
+        Customer initialCustomer = new Customer("John", "Doe", "johndoe.initialCustomer@gmail.com", "New street 23", "04953122");
+        initialCustomer.setId("c6093628-b11a-4ece-b2f0-509fc0f3c132");
+
+        List<Customer> resultList = customerService.getAllCustomers(adminId);
+
+        //then
+        assertTrue(resultList.contains(initialCustomer));
+    }
+
+    @Test
+    void givenNewCustomerService_whenGettingAllCustomers_thenListDoesNotContainCustomerThatWasNotAdded(){
+        //given
+        CustomerService customerService = new CustomerService(new CustomerDatabase(), new AdminDatabase());
+
+        //when
+        String adminId = "de6def71-53ca-4e5e-85ef-9ed3ab598391";
+        Customer initialCustomer = new Customer("John", "Doe", "johndoe.initialCustomer@gmail.com", "New street 23", "04953122");
+        initialCustomer.setId("c6093628-b11a-4ece-b2f0-509fc0f3c132");
+
+        Customer nonEurderCustomer = new Customer("Bob", "Doe", "bobby@gmail.com", "New street 23", "04953122");
+        nonEurderCustomer.setId("d7093628-b11a-4ece-b2f0-509fc0f3c132");
+
+        List<Customer> resultList = customerService.getAllCustomers(adminId);
+
+        //then
+        assertFalse(resultList.contains(nonEurderCustomer));
     }
 }
