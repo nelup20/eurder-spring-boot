@@ -1,9 +1,10 @@
 package com.neluplatonov.eurder.api.controllers;
 
-import com.neluplatonov.eurder.api.dtos.itemgroupdtos.ItemGroupDto;
+import com.neluplatonov.eurder.api.dtos.itemgroupdtos.NewItemGroupDto;
+import com.neluplatonov.eurder.api.dtos.orderdtos.NewlyCreatedOrderDto;
 import com.neluplatonov.eurder.api.mappers.ItemGroupMapper;
+import com.neluplatonov.eurder.api.mappers.OrderMapper;
 import com.neluplatonov.eurder.domain.ItemGroup;
-import com.neluplatonov.eurder.domain.Order;
 import com.neluplatonov.eurder.domain.Report;
 import com.neluplatonov.eurder.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,13 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    // TODO: Need to have createOrder return a NewlyCreatedOrderDto, store the Item price at the time of ordering in the ItemGroup
     @PostMapping
-    public Order createOrder(@RequestHeader String customerId, @RequestBody List<ItemGroupDto> orderItemsDto){
-        orderService.checkIfAllItemIdsExistInItemDatabase(orderItemsDto);
+    public NewlyCreatedOrderDto createOrder(@RequestHeader String customerId, @RequestBody List<NewItemGroupDto> newOrderItemsDto){
+        orderService.checkIfAllItemIdsExistInItemDatabase(newOrderItemsDto);
 
-        List<ItemGroup> orderItems = ItemGroupMapper.convertListOfItemGroupDtosToListOfItemGroups(orderItemsDto);
+        List<ItemGroup> orderItems = ItemGroupMapper.convertListOfItemGroupDtosToListOfItemGroups(newOrderItemsDto);
 
-        return orderService.createOrder(customerId, orderItems);
+        return OrderMapper.convertOrderToNewlyCreatedOrderDto(orderService.createOrder(customerId, orderItems));
     }
 
     @GetMapping("/my-orders")

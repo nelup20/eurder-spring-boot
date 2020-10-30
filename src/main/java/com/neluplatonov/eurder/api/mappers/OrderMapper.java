@@ -1,6 +1,7 @@
 package com.neluplatonov.eurder.api.mappers;
 
 import com.neluplatonov.eurder.api.dtos.itemgroupdtos.ReportItemGroupDto;
+import com.neluplatonov.eurder.api.dtos.orderdtos.NewlyCreatedOrderDto;
 import com.neluplatonov.eurder.api.dtos.orderdtos.ReportOrderDto;
 import com.neluplatonov.eurder.domain.ItemGroup;
 import com.neluplatonov.eurder.domain.Order;
@@ -21,7 +22,7 @@ public class OrderMapper {
             for(ItemGroup itemGroup : order.getItems()){
                 String itemName = itemDatabase.getItemName(itemGroup.getItemId());
                 int itemQuantityOrdered = itemGroup.getItemQuantityToOrder();
-                double itemGroupTotalPriceInEuros = itemDatabase.getItemPriceInEuros(itemGroup.getItemId()) * itemQuantityOrdered;
+                double itemGroupTotalPriceInEuros = itemGroup.getItemPriceInEuros() * itemQuantityOrdered;
 
                 resultItemGroupList.add(new ReportItemGroupDto(itemName, itemQuantityOrdered, itemGroupTotalPriceInEuros));
             }
@@ -30,5 +31,9 @@ public class OrderMapper {
         }
 
         return resultOrderList;
+    }
+
+    public static NewlyCreatedOrderDto convertOrderToNewlyCreatedOrderDto(Order orderToConvert){
+        return new NewlyCreatedOrderDto(orderToConvert.getId(), ItemGroupMapper.convertListOfItemGroupsToListOfCreatedItemGroupDtos(orderToConvert.getItems()), orderToConvert.getCustomerId(), orderToConvert.getTotalOrderCostInEuros());
     }
 }

@@ -1,7 +1,6 @@
 package com.neluplatonov.eurder.service;
 
-import com.neluplatonov.eurder.api.dtos.itemgroupdtos.ItemGroupDto;
-import com.neluplatonov.eurder.api.dtos.orderdtos.ReportOrderDto;
+import com.neluplatonov.eurder.api.dtos.itemgroupdtos.NewItemGroupDto;
 import com.neluplatonov.eurder.domain.ItemGroup;
 import com.neluplatonov.eurder.domain.Order;
 import com.neluplatonov.eurder.domain.Report;
@@ -64,7 +63,7 @@ class OrderServiceTest {
         OrderService orderService = new OrderService(orderDatabase, customerDatabase, itemDatabase);
 
         //when
-        List<ItemGroupDto> orderItems = List.of(new ItemGroupDto("12345", 2), new ItemGroupDto("bc23cbd0-fc7a-404d-a473-39711a0f7c7c", 3));
+        List<NewItemGroupDto> orderItems = List.of(new NewItemGroupDto("12345", 2), new NewItemGroupDto("bc23cbd0-fc7a-404d-a473-39711a0f7c7c", 3));
 
         //then
         assertThrows(IllegalArgumentException.class, () -> {
@@ -81,7 +80,7 @@ class OrderServiceTest {
         OrderService orderService = new OrderService(orderDatabase, customerDatabase, itemDatabase);
 
         //when
-        List<ItemGroupDto> orderItems = List.of(new ItemGroupDto("c6093628-b11a-4ece-b2f0-509fc0f3c132", 2), new ItemGroupDto("bc23cbd0-fc7a-404d-a473-39711a0f7c7c", 3));
+        List<NewItemGroupDto> orderItems = List.of(new NewItemGroupDto("c6093628-b11a-4ece-b2f0-509fc0f3c132", 2), new NewItemGroupDto("bc23cbd0-fc7a-404d-a473-39711a0f7c7c", 3));
 
         //then
         assertThrows(IllegalArgumentException.class, () -> {
