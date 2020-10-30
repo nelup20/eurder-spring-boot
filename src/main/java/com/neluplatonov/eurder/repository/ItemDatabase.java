@@ -48,4 +48,8 @@ public class ItemDatabase {
     public int getItemAmountInStock(String itemId){
         return items.get(itemId).getAmountInStock();
     }
+
+    public String getItemName(String itemId){
+        return items.get(itemId).getName();
+    }
 }

@@ -1,8 +1,12 @@
 package com.neluplatonov.eurder.service;
 
-import com.neluplatonov.eurder.api.dtos.itemgroupdtos.ItemGroupDto;
+import com.neluplatonov.eurder.api.dtos.itemgroupdtos.NewItemGroupDto;
+import com.neluplatonov.eurder.api.dtos.orderdtos.ReportOrderDto;
+import com.neluplatonov.eurder.api.mappers.OrderMapper;
 import com.neluplatonov.eurder.domain.ItemGroup;
 import com.neluplatonov.eurder.domain.Order;
+import com.neluplatonov.eurder.domain.Report;
+import com.neluplatonov.eurder.exception.NoCustomerFoundException;
 import com.neluplatonov.eurder.repository.CustomerDatabase;
 import com.neluplatonov.eurder.repository.ItemDatabase;
 import com.neluplatonov.eurder.repository.OrderDatabase;
@@ -29,9 +33,9 @@ public class OrderService {
 
     public Order createOrder(String customerId, List<ItemGroup> orderItems){
         IdValidator.validateSingleUUID(customerId);
-        if(!customerDatabase.customerExists(customerId)) throw new IllegalArgumentException("The customer with the provided ID does not exist! Only a registered Eurder customer can make an Order.");
+        if(!customerDatabase.customerExists(customerId)) throw new NoCustomerFoundException("The customer with the provided ID does not exist! Only a registered Eurder customer can make an Order.");
 
-        List<ItemGroup> orderItemsWithCorrectShippingDates = assignCorrectShippingDates(orderItems);
+        List<ItemGroup> orderItemsWithCorrectShippingDates = assignCorrectShippingDatesAndItemPrices(orderItems);
         double newOrderTotalCostInEuros = calculateTotalCostInEurosForNewOrder(orderItemsWithCorrectShippingDates);
 
         Order newOrder = new Order(orderItemsWithCorrectShippingDates, customerId, newOrderTotalCostInEuros);
@@ -41,20 +45,22 @@ public class OrderService {
     }
 
 
-    public void checkIfAllItemIdsExistInItemDatabase(List<ItemGroupDto> itemGroupDtosToCheck){
-        IdValidator.validateListOfUUIDs(itemGroupDtosToCheck.stream().map(ItemGroupDto::getItemId).collect(Collectors.toList()));
+    public void checkIfAllItemIdsExistInItemDatabase(List<NewItemGroupDto> newItemGroupDtosToCheck){
+        IdValidator.validateListOfUUIDs(newItemGroupDtosToCheck.stream().map(NewItemGroupDto::getItemId).collect(Collectors.toList()));
 
-        if(!itemGroupDtosToCheck.stream().allMatch(itemGroupDto -> itemDatabase.itemExists(itemGroupDto.getItemId()))) throw new IllegalArgumentException("We couldn't find an item with 1 or more of the item ID's you provided.");
+        if(!newItemGroupDtosToCheck.stream().allMatch(itemGroupDto -> itemDatabase.itemExists(itemGroupDto.getItemId()))) throw new IllegalArgumentException("We couldn't find an item with 1 or more of the item ID's you provided.");
     }
 
 
-    private List<ItemGroup> assignCorrectShippingDates(List<ItemGroup> orderItems){
+    private List<ItemGroup> assignCorrectShippingDatesAndItemPrices(List<ItemGroup> orderItems){
         List<ItemGroup> resultList = orderItems;
         
         for(ItemGroup itemGroup : resultList){
             if(thereIsEnoughInStockForTheOrder(itemGroup)){
                 itemGroup.setShippingDate(LocalDate.now().plusDays(1));
             }
+
+            itemGroup.setItemPriceInEuros(itemDatabase.getItemPriceInEuros(itemGroup.getItemId()));
         }
 
         return resultList;
@@ -70,4 +76,15 @@ public class OrderService {
     private boolean thereIsEnoughInStockForTheOrder(ItemGroup itemGroup) {
         return itemDatabase.getItemAmountInStock(itemGroup.getItemId()) >= itemGroup.getItemQuantityToOrder();
     }
+
+    public Report getOrdersReport(String customerId){
+        IdValidator.validateSingleUUID(customerId);
+        if(!customerDatabase.customerExists(customerId)) throw new NoCustomerFoundException("The customer with the provided ID does not exist!");
+
+        List<Order> customerOrders = orderDatabase.getAllOrdersPerCustomer(customerId);
+        List<ReportOrderDto> customerReportOrders = OrderMapper.convertCustomerOrdersListToReportOrderDtoList(customerOrders, itemDatabase);
+
+        return new Report(customerReportOrders);
+    }
+
 }

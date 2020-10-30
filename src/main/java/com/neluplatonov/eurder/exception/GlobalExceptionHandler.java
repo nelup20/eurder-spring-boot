@@ -35,4 +35,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, exception.getMessage());
     }
 
+    @ExceptionHandler(NoOrdersFoundException.class)
+    protected void NoOrdersFoundExceptionHandler(NoOrdersFoundException exception, HttpServletResponse response) throws IOException {
+        response.sendError(HttpServletResponse.SC_NOT_FOUND, exception.getMessage());
+    }
+
+    @ExceptionHandler(NoCustomerFoundException.class)
+    protected void NoCustomerFoundExceptionHandler(NoCustomerFoundException exception, HttpServletResponse response) throws IOException {
+        response.sendError(HttpServletResponse.SC_NOT_FOUND, exception.getMessage());
+    }
+
 }

@@ -3,6 +3,7 @@ package com.neluplatonov.eurder.api.controllers;
 import com.neluplatonov.eurder.api.dtos.customerDtos.NewCustomerDto;
 import com.neluplatonov.eurder.api.mappers.CustomerMapper;
 import com.neluplatonov.eurder.domain.Customer;
+import com.neluplatonov.eurder.domain.Report;
 import com.neluplatonov.eurder.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,5 +39,4 @@ public class CustomerController {
     public Customer getCustomerById(@PathVariable String customerId, @RequestHeader String userId){
         return customerService.getCustomerById(customerId, userId);
     }
-
 }
