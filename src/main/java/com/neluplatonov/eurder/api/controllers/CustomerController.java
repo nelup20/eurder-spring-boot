@@ -6,6 +6,7 @@ import com.neluplatonov.eurder.domain.Customer;
 import com.neluplatonov.eurder.domain.Report;
 import com.neluplatonov.eurder.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+    // Story 1 - Create a customer account
     @PostMapping
     public Customer createCustomer(@RequestBody NewCustomerDto newCustomerDto){
         Customer newCustomer = CustomerMapper.convertNewCustomerDtoToCustomer(newCustomerDto);
@@ -30,11 +32,13 @@ public class CustomerController {
         return newCustomer;
     }
 
-    @GetMapping
+    // Story 7 - View all customers
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Customer> getAllCustomers(@RequestHeader String userId){
         return customerService.getAllCustomers(userId);
     }
 
+    // Story 8 - View a single customer
     @GetMapping("/{customerId}")
     public Customer getCustomerById(@PathVariable String customerId, @RequestHeader String userId){
         return customerService.getCustomerById(customerId, userId);

@@ -33,6 +33,10 @@ public class ItemDatabase {
         items.put(newItemToAdd.getId(), newItemToAdd);
     }
 
+    public void updateItem(Item updatedItem){
+        items.put(updatedItem.getId(), updatedItem);
+    }
+
     public Item getItemById(String itemId){
         return items.get(itemId);
     }

@@ -22,6 +22,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    // Story 3 - Order items
     @PostMapping
     public NewlyCreatedOrderDto createOrder(@RequestHeader String customerId, @RequestBody List<NewItemGroupDto> newOrderItemsDto){
         orderService.checkIfAllItemIdsExistInItemDatabase(newOrderItemsDto);
@@ -31,6 +32,8 @@ public class OrderController {
         return OrderMapper.convertOrderToNewlyCreatedOrderDto(orderService.createOrder(customerId, orderItems));
     }
 
+
+    // Story 5 - View report of orders
     @GetMapping("/my-orders")
     public Report getOrdersReport(@RequestHeader String customerId){
         return orderService.getOrdersReport(customerId);
