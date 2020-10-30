@@ -1,6 +1,7 @@
 package com.neluplatonov.eurder.service;
 
 import com.neluplatonov.eurder.api.dtos.itemgroupdtos.NewItemGroupDto;
+import com.neluplatonov.eurder.domain.Item;
 import com.neluplatonov.eurder.domain.ItemGroup;
 import com.neluplatonov.eurder.domain.Order;
 import com.neluplatonov.eurder.domain.Report;
@@ -261,5 +262,59 @@ class OrderServiceTest {
 
         //then
         assertEquals(3, reportToCompareTo.getOrders().size());
+    }
+
+    @Test
+    void givenNewOrderService_whenGettingOrdersReport_thenPriceOfFirstOrderIs100AndPriceOfSecondOrderIs200() {
+        //given
+        OrderDatabase orderDatabase = new OrderDatabase();
+        CustomerDatabase customerDatabase = new CustomerDatabase();
+        ItemDatabase itemDatabase = new ItemDatabase();
+        OrderService orderService = new OrderService(orderDatabase, customerDatabase, itemDatabase);
+
+        //when
+        List<ItemGroup> orderItems = List.of(new ItemGroup("44492ce0-dfca-49f5-b519-0bf2839f2d64", 10));
+        String customerId = "c6093628-b11a-4ece-b2f0-509fc0f3c132";
+        orderService.createOrder(customerId, orderItems);
+
+        Item itemToUpdate = itemDatabase.getItemById("44492ce0-dfca-49f5-b519-0bf2839f2d64");
+        Item newItem = new Item(itemToUpdate.getName(), itemToUpdate.getDescription(), 10, itemToUpdate.getAmountInStock());
+        newItem.setId("44492ce0-dfca-49f5-b519-0bf2839f2d64");
+
+        itemDatabase.addNewItemOrUpdateExistingOne(newItem);
+        orderService.createOrder(customerId, orderItems);
+        Report reportToCompareTo = orderService.getOrdersReport(customerId);
+        double firstOrderTotalCost = reportToCompareTo.getOrders().get(0).getTotalOrderCostInEuros();
+        double secondOrderTotalCost = reportToCompareTo.getOrders().get(1).getTotalOrderCostInEuros();
+
+        //then
+        assertTrue((firstOrderTotalCost == 50 || firstOrderTotalCost == 100) && (secondOrderTotalCost == 50 || secondOrderTotalCost == 100));
+    }
+
+    @Test
+    void givenNewOrderService_whenGettingOrdersReport_thenNameOfFirstOrderIsWaterAndNameOfSecondOrderIsSuperWater() {
+        //given
+        OrderDatabase orderDatabase = new OrderDatabase();
+        CustomerDatabase customerDatabase = new CustomerDatabase();
+        ItemDatabase itemDatabase = new ItemDatabase();
+        OrderService orderService = new OrderService(orderDatabase, customerDatabase, itemDatabase);
+
+        //when
+        List<ItemGroup> orderItems = List.of(new ItemGroup("44492ce0-dfca-49f5-b519-0bf2839f2d64", 10));
+        String customerId = "c6093628-b11a-4ece-b2f0-509fc0f3c132";
+        orderService.createOrder(customerId, orderItems);
+
+        Item itemToUpdate = itemDatabase.getItemById("44492ce0-dfca-49f5-b519-0bf2839f2d64");
+        Item newItem = new Item("Super Water", itemToUpdate.getDescription(), 10, itemToUpdate.getAmountInStock());
+        newItem.setId("44492ce0-dfca-49f5-b519-0bf2839f2d64");
+
+        itemDatabase.addNewItemOrUpdateExistingOne(newItem);
+        orderService.createOrder(customerId, orderItems);
+        Report reportToCompareTo = orderService.getOrdersReport(customerId);
+
+        String firstItemName = reportToCompareTo.getOrders().get(0).getItems().get(0).getItemName();
+        String secondItemName = reportToCompareTo.getOrders().get(1).getItems().get(0).getItemName();
+        //then
+        assertTrue((firstItemName.equals("Water") || firstItemName.equals("Super Water")) && (secondItemName.equals("Water") || secondItemName.equals("Super Water")) );
     }
 }

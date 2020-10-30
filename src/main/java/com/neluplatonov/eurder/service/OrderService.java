@@ -35,10 +35,10 @@ public class OrderService {
         IdValidator.validateSingleUUID(customerId);
         if(!customerDatabase.customerExists(customerId)) throw new NoCustomerFoundException("The customer with the provided ID does not exist! Only a registered Eurder customer can make an Order.");
 
-        List<ItemGroup> orderItemsWithCorrectShippingDates = assignCorrectShippingDatesAndItemPrices(orderItems);
-        double newOrderTotalCostInEuros = calculateTotalCostInEurosForNewOrder(orderItemsWithCorrectShippingDates);
+        List<ItemGroup> orderItemsWithCorrectShippingDatesAndPricesAndItemNames = assignCorrectShippingDatesAndItemPricesAndItemNames(orderItems);
+        double newOrderTotalCostInEuros = calculateTotalCostInEurosForNewOrder(orderItemsWithCorrectShippingDatesAndPricesAndItemNames);
 
-        Order newOrder = new Order(orderItemsWithCorrectShippingDates, customerId, newOrderTotalCostInEuros);
+        Order newOrder = new Order(orderItemsWithCorrectShippingDatesAndPricesAndItemNames, customerId, newOrderTotalCostInEuros);
         orderDatabase.createOrder(newOrder);
 
         return newOrder;
@@ -52,15 +52,18 @@ public class OrderService {
     }
 
 
-    private List<ItemGroup> assignCorrectShippingDatesAndItemPrices(List<ItemGroup> orderItems){
+    private List<ItemGroup> assignCorrectShippingDatesAndItemPricesAndItemNames(List<ItemGroup> orderItems){
         List<ItemGroup> resultList = orderItems;
         
         for(ItemGroup itemGroup : resultList){
+            String itemId = itemGroup.getItemId();
+
             if(thereIsEnoughInStockForTheOrder(itemGroup)){
                 itemGroup.setShippingDate(LocalDate.now().plusDays(1));
             }
 
-            itemGroup.setItemPriceInEuros(itemDatabase.getItemPriceInEuros(itemGroup.getItemId()));
+            itemGroup.setItemPriceInEuros(itemDatabase.getItemPriceInEuros(itemId));
+            itemGroup.setItemName(itemDatabase.getItemName(itemId));
         }
 
         return resultList;
@@ -82,7 +85,7 @@ public class OrderService {
         if(!customerDatabase.customerExists(customerId)) throw new NoCustomerFoundException("The customer with the provided ID does not exist!");
 
         List<Order> customerOrders = orderDatabase.getAllOrdersPerCustomer(customerId);
-        List<ReportOrderDto> customerReportOrders = OrderMapper.convertCustomerOrdersListToReportOrderDtoList(customerOrders, itemDatabase);
+        List<ReportOrderDto> customerReportOrders = OrderMapper.convertCustomerOrdersListToReportOrderDtoList(customerOrders);
 
         return new Report(customerReportOrders);
     }
