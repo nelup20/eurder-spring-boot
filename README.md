@@ -11,7 +11,7 @@
 - Nice-to-have's:
    - [X] Story 5
    - [ ] Story 10
-   - [ ] Story 4
+   - [X] Story 4
    - [ ] Story 9
    - [ ] Story 6
 
