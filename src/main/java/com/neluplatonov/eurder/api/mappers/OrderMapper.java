@@ -13,14 +13,14 @@ import java.util.List;
 public class OrderMapper {
 
     // TODO: See if you can refactor this monstrosity (2nd idea: make 2 nested streams?)
-    public static List<ReportOrderDto> convertCustomerOrdersListToReportOrderDtoList(List<Order> listToConvert, ItemDatabase itemDatabase){
+    public static List<ReportOrderDto> convertCustomerOrdersListToReportOrderDtoList(List<Order> listToConvert){
         List<ReportOrderDto> resultOrderList = new ArrayList<>();
 
         for(Order order : listToConvert){
             List<ReportItemGroupDto> resultItemGroupList = new ArrayList<>();
 
             for(ItemGroup itemGroup : order.getItems()){
-                String itemName = itemDatabase.getItemName(itemGroup.getItemId());
+                String itemName = itemGroup.getItemName();
                 int itemQuantityOrdered = itemGroup.getItemQuantityToOrder();
                 double itemGroupTotalPriceInEuros = itemGroup.getItemPriceInEuros() * itemQuantityOrdered;
 

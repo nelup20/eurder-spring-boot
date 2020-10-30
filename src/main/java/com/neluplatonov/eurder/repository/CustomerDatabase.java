@@ -20,6 +20,7 @@ public class CustomerDatabase {
         initialCustomer1.setId("c6093628-b11a-4ece-b2f0-509fc0f3c132");
         customers.put(initialCustomer1.getId(), initialCustomer1);
 
+
         Customer initialCustomer2 = new Customer("Tom", "Vu", "tomvu.initialCustomer@gmail.com", "New street 23", "04953122");
         initialCustomer2.setId("a1183628-b11a-4ece-b2f0-509fc0f3c132");
         customers.put(initialCustomer2.getId(), initialCustomer2);

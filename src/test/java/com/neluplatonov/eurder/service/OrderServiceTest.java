@@ -262,4 +262,6 @@ class OrderServiceTest {
         //then
         assertEquals(3, reportToCompareTo.getOrders().size());
     }
+
+    // Test updated price and name of item when creating report
 }

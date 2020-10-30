@@ -24,7 +24,7 @@ public class ItemController {
     public Item addNewItem(@RequestHeader String userId, @RequestBody NewItemDto newItemDto){
         Item newItem = ItemMapper.convertNewItemDtoToItem(newItemDto);
 
-        itemService.addNewItem(userId, newItem);
+        itemService.addNewItemOrUpdateExistingOne(userId, newItem);
 
         return newItem;
     }
@@ -37,7 +37,7 @@ public class ItemController {
         Item itemToUpdate = ItemMapper.convertUpdateItemDtoToItem(updateItemDto);
         itemToUpdate.setId(itemId);
 
-        itemService.updateItem(userId, itemToUpdate);
+        itemService.addNewItemOrUpdateExistingOne(userId, itemToUpdate);
 
         return itemToUpdate;
     }

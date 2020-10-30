@@ -29,12 +29,8 @@ public class ItemDatabase {
         items.put(initialItem4.getId(), initialItem4);
     }
 
-    public void addNewItem(Item newItemToAdd){
-        items.put(newItemToAdd.getId(), newItemToAdd);
-    }
-
-    public void updateItem(Item updatedItem){
-        items.put(updatedItem.getId(), updatedItem);
+    public void addNewItemOrUpdateExistingOne(Item itemToAddOrUpdate){
+        items.put(itemToAddOrUpdate.getId(), itemToAddOrUpdate);
     }
 
     public Item getItemById(String itemId){
