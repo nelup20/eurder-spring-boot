@@ -29,8 +29,8 @@ public class ItemDatabase {
         items.put(initialItem4.getId(), initialItem4);
     }
 
-    public void addNewItem(Item newItemToAdd){
-        items.put(newItemToAdd.getId(), newItemToAdd);
+    public void addNewItemOrUpdateExistingOne(Item itemToAddOrUpdate){
+        items.put(itemToAddOrUpdate.getId(), itemToAddOrUpdate);
     }
 
     public Item getItemById(String itemId){
@@ -47,5 +47,9 @@ public class ItemDatabase {
 
     public int getItemAmountInStock(String itemId){
         return items.get(itemId).getAmountInStock();
+    }
+
+    public String getItemName(String itemId){
+        return items.get(itemId).getName();
     }
 }

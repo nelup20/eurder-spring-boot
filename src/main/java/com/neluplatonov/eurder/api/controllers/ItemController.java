@@ -1,6 +1,7 @@
 package com.neluplatonov.eurder.api.controllers;
 
 import com.neluplatonov.eurder.api.dtos.itemDtos.NewItemDto;
+import com.neluplatonov.eurder.api.dtos.itemDtos.UpdateItemDto;
 import com.neluplatonov.eurder.api.mappers.ItemMapper;
 import com.neluplatonov.eurder.domain.Item;
 import com.neluplatonov.eurder.service.ItemService;
@@ -17,12 +18,27 @@ public class ItemController {
         this.itemService = itemService;
     }
 
+
+    // Story 2 - Add an item
     @PostMapping
     public Item addNewItem(@RequestHeader String userId, @RequestBody NewItemDto newItemDto){
         Item newItem = ItemMapper.convertNewItemDtoToItem(newItemDto);
 
-        itemService.addNewItem(userId, newItem);
+        itemService.addNewItemOrUpdateExistingOne(userId, newItem);
 
         return newItem;
+    }
+
+    // Story 4 - Update an item
+    @PutMapping("/{itemId}")
+    public Item updateItem(@PathVariable String itemId, @RequestHeader String userId, @RequestBody UpdateItemDto updateItemDto){
+        itemService.checkThatItemExists(itemId);
+
+        Item itemToUpdate = ItemMapper.convertUpdateItemDtoToItem(updateItemDto);
+        itemToUpdate.setId(itemId);
+
+        itemService.addNewItemOrUpdateExistingOne(userId, itemToUpdate);
+
+        return itemToUpdate;
     }
 }

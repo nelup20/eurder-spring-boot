@@ -23,13 +23,18 @@ public class ItemService {
         this.adminDatabase = adminDatabase;
     }
 
-    public void addNewItem(String userId, Item newItemToAdd){
+    public void addNewItemOrUpdateExistingOne(String userId, Item itemToAddOrUpdate){
 
-        ItemValidator.validateItemArguments(List.of(newItemToAdd.getName(), newItemToAdd.getDescription(), newItemToAdd.getPriceInEuros(), newItemToAdd.getAmountInStock()));
+        ItemValidator.validateItemArguments(List.of(itemToAddOrUpdate.getName(), itemToAddOrUpdate.getDescription(), itemToAddOrUpdate.getPriceInEuros(), itemToAddOrUpdate.getAmountInStock()));
 
         IdValidator.validateSingleUUID(userId);
         if(!adminDatabase.isUserAnAdmin(userId)) throw new AdminPrivilegeException("Only an admin can add a new item!");
 
-        itemDatabase.addNewItem(newItemToAdd);
+        itemDatabase.addNewItemOrUpdateExistingOne(itemToAddOrUpdate);
+    }
+
+    public void checkThatItemExists(String itemId){
+        IdValidator.validateSingleUUID(itemId);
+        if(!itemDatabase.itemExists(itemId)) throw new IllegalArgumentException("The item with the provided ID does not exist!");
     }
 }

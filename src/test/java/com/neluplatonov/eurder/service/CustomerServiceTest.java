@@ -2,8 +2,10 @@ package com.neluplatonov.eurder.service;
 
 import com.neluplatonov.eurder.domain.Customer;
 import com.neluplatonov.eurder.exception.AdminPrivilegeException;
+import com.neluplatonov.eurder.exception.NoCustomerFoundException;
 import com.neluplatonov.eurder.repository.AdminDatabase;
 import com.neluplatonov.eurder.repository.CustomerDatabase;
+import com.neluplatonov.eurder.repository.OrderDatabase;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -234,7 +236,7 @@ class CustomerServiceTest {
         String itemId = "44492ce0-dfca-49f5-b519-0bf2839f2d64";
 
         //then
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NoCustomerFoundException.class, () -> {
             customerService.getCustomerById(itemId, adminId);
         });
     }

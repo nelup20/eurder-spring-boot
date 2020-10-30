@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemServiceTest {
 
     @Test
-    void givenNewItemService_whenAdding1NewItemWithInvalidAdminId_thenThrowsIllegalArgumentException(){
+    void givenNewItemService_whenAdding1NewItemOrUpdatingExistingItemWithInvalidAdminId_thenThrowsIllegalArgumentException(){
         //given
         ItemDatabase itemDatabase = new ItemDatabase();
         AdminDatabase adminDatabase = new AdminDatabase();
@@ -23,13 +23,13 @@ class ItemServiceTest {
 
         //then
         assertThrows(IllegalArgumentException.class, () -> {
-            itemService.addNewItem(adminId, newItem);
+            itemService.addNewItemOrUpdateExistingOne(adminId, newItem);
         });
 
     }
 
     @Test
-    void givenNewItemService_whenAdding1NewItemWithNonAdminId_thenThrowsAdminPrivilegeException(){
+    void givenNewItemService_whenAdding1NewItemOrUpdatingExistingItemWithNonAdminId_thenThrowsAdminPrivilegeException(){
         //given
         ItemDatabase itemDatabase = new ItemDatabase();
         AdminDatabase adminDatabase = new AdminDatabase();
@@ -41,13 +41,13 @@ class ItemServiceTest {
 
         //then
         assertThrows(AdminPrivilegeException.class, () -> {
-            itemService.addNewItem(adminId, newItem);
+            itemService.addNewItemOrUpdateExistingOne(adminId, newItem);
         });
 
     }
 
     @Test
-    void givenNewItemService_whenAdding1NewItemWithEmptyName_thenThrowsIllegalArgumentException(){
+    void givenNewItemService_whenAdding1NewItemOrUpdatingExistingItemWithEmptyName_thenThrowsIllegalArgumentException(){
         //given
         ItemDatabase itemDatabase = new ItemDatabase();
         AdminDatabase adminDatabase = new AdminDatabase();
@@ -59,13 +59,13 @@ class ItemServiceTest {
 
         //then
         assertThrows(IllegalArgumentException.class, () -> {
-            itemService.addNewItem(adminId, newItem);
+            itemService.addNewItemOrUpdateExistingOne(adminId, newItem);
         });
 
     }
 
     @Test
-    void givenNewItemService_whenAdding1NewItemWithEmptyDescription_thenThrowsIllegalArgumentException(){
+    void givenNewItemService_whenAdding1NewItemOrUpdatingExistingItemWithEmptyDescription_thenThrowsIllegalArgumentException(){
         //given
         ItemDatabase itemDatabase = new ItemDatabase();
         AdminDatabase adminDatabase = new AdminDatabase();
@@ -77,13 +77,13 @@ class ItemServiceTest {
 
         //then
         assertThrows(IllegalArgumentException.class, () -> {
-            itemService.addNewItem(adminId, newItem);
+            itemService.addNewItemOrUpdateExistingOne(adminId, newItem);
         });
 
     }
 
     @Test
-    void givenNewItemService_whenAdding1NewItemWithNegativePrice_thenThrowsIllegalArgumentException(){
+    void givenNewItemService_whenAdding1NewItemOrUpdatingExistingItemWithNegativePrice_thenThrowsIllegalArgumentException(){
         //given
         ItemDatabase itemDatabase = new ItemDatabase();
         AdminDatabase adminDatabase = new AdminDatabase();
@@ -95,13 +95,13 @@ class ItemServiceTest {
 
         //then
         assertThrows(IllegalArgumentException.class, () -> {
-            itemService.addNewItem(adminId, newItem);
+            itemService.addNewItemOrUpdateExistingOne(adminId, newItem);
         });
 
     }
 
     @Test
-    void givenNewItemService_whenAdding1NewItemWithNegativeAmountInStock_thenThrowsIllegalArgumentException(){
+    void givenNewItemService_whenAdding1NewItemOrUpdatingExistingItemWithNegativeAmountInStock_thenThrowsIllegalArgumentException(){
         //given
         ItemDatabase itemDatabase = new ItemDatabase();
         AdminDatabase adminDatabase = new AdminDatabase();
@@ -113,13 +113,13 @@ class ItemServiceTest {
 
         //then
         assertThrows(IllegalArgumentException.class, () -> {
-            itemService.addNewItem(adminId, newItem);
+            itemService.addNewItemOrUpdateExistingOne(adminId, newItem);
         });
 
     }
 
     @Test
-    void givenNewItemService_whenAdding1NewItem_thenNewItemIsInDatabase(){
+    void givenNewItemService_whenAdding1NewItemOrUpdatingExistingItem_thenNewItemIsInDatabase(){
         //given
         ItemDatabase itemDatabase = new ItemDatabase();
         AdminDatabase adminDatabase = new AdminDatabase();
@@ -128,7 +128,7 @@ class ItemServiceTest {
         //when
         Item newItem = new Item("Orange", "Nice for bones", 2, 12);
         String adminId = "de6def71-53ca-4e5e-85ef-9ed3ab598391";
-        itemService.addNewItem(adminId, newItem);
+        itemService.addNewItemOrUpdateExistingOne(adminId, newItem);
 
         //then
         assertEquals(newItem, itemDatabase.getItemById(newItem.getId()));

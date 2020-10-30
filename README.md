@@ -9,9 +9,9 @@
    - [X] Refactored stories above
    - [ ] Update old UML diagram
 - Nice-to-have's:
-   - [ ] Story 5
+   - [X] Story 5
    - [ ] Story 10
-   - [ ] Story 4
+   - [X] Story 4
    - [ ] Story 9
    - [ ] Story 6
 
