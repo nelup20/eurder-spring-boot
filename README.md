@@ -17,7 +17,7 @@
 - Not actually required but I guess it's kinda cool-to-have's:
    - [X] Deploy
    - [X] Create basic front-end
-   - [ ] Complete front-end for all the completed stories
+   - [X] Complete front-end for all the completed stories
 ## UML diagrams
 ### Basic must-have's
 ![Basic UML Diagram](eurder-must-have-UML-diagram.jpg) 
